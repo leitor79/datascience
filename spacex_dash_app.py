@@ -79,14 +79,18 @@ app.layout = html.Div(children=[html.H1('SpaceX Launch Records Dashboard',
 )
 def get_scatter_chart(entered_site, payload_kg):
     print("Scatter site, kg: ", entered_site, payload_kg)
-    filtered_df = spacex_df
+    #filtered_df = spacex_df
+    filtered_df=spacex_df[            
+            (spacex_df['Payload Mass (kg)'] >= payload_kg[0])
+            & (spacex_df['Payload Mass (kg)'] <= payload_kg[1])
+            ]
     if entered_site == 'ALL':
         fig = px.scatter(filtered_df, 
             x='Payload Mass (kg)', 
             y='class', 
             color="Booster Version Category",
             #names='Launch Site', 
-            title='Correlation between Payload and Success for all sites')
+            title='Correlation between Payload and Success for all sites and for masses between ' + str(payload_kg[0]) + 'kg and ' + str(payload_kg[1]) + 'kg')
         return fig
     else:
         # return the outcomes piechart for a selected site
@@ -98,7 +102,7 @@ def get_scatter_chart(entered_site, payload_kg):
         #filtered_df=filtered_df.groupby(['Launch Site','class']).size().reset_index(name='class count')
         fig = px.scatter(filtered_df, x='Payload Mass (kg)', y='class', 
         color="Booster Version Category",
-        title='Correlation between Payload and Success for '+ entered_site)
+        title='Correlation between Payload and Success for '+ entered_site + ' and for masses between ' + str(payload_kg[0]) + 'kg and ' + str(payload_kg[1]) + 'kg')
         return fig
 
 
